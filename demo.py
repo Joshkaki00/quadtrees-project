@@ -155,3 +155,28 @@ class Demo:
             text = self.font.render(stat, True, WHITE)
             self.screen.blit(text, (10, y_offset))
             y_offset += 25
+            
+        # Controls
+        y_offset = HEIGHT - 120
+        controls = [
+            "SPACE - Toggle Method",
+            "R - Reset Particles",
+            "UP/DOWN - Change Count",
+            "T - Toggle Tree View",
+            "Q - Quit"
+        ]
+        
+        for control in controls:
+            text = self.font.render(control, True, WHITE)
+            self.screen.blit(text, (10, y_offset))
+            y_offset += 20
+        
+        # Performance comparison
+        if not self.use_quadtree:
+            n = len(self.particles)
+            theoretical = n * (n - 1) // 2
+            warn = self.font.render(
+                f"O(n²) = {theoretical} comparisons!", 
+                True, RED
+            )
+            self.screen.blit(warn, (WIDTH - 300, 10))
