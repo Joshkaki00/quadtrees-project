@@ -1,6 +1,13 @@
+"""
+Quadtree Implementation for 2D Collision Detection
+Author: Joshkaki00
+
+This module implements a quadtree data structure for efficient spatial partitioning
+and collision detection in 2D space.
+"""
+
 from dataclasses import dataclass
-from typing import List, Optional
-from typing import Tuple
+from typing import List, Optional, Tuple
 
 @dataclass
 class Point:
@@ -20,14 +27,15 @@ class Rectangle:
         """Check if a point is within this rectangle."""
         return (self.x - self.width <= point.x <= self.x + self.width and
                 self.y - self.height <= point.y <= self.y + self.height)
-    
+
     def intersects(self, other: 'Rectangle') -> bool:
         """Check if this rectangle intersects with another rectangle."""
         return not (self.x + self.width < other.x - other.width or
                     self.x - self.width > other.x + other.width or
                     self.y + self.height < other.y - other.height or
                     self.y - self.height > other.y + other.height)
-        
+
+
 @dataclass
 class Particle:
     """Represents a moving particle/object in 2D space."""
@@ -48,7 +56,8 @@ class Particle:
         dy = self.y - other.y
         distance = (dx * dx + dy * dy) ** 0.5
         return distance < (self.radius + other.radius)
-    
+
+
 class QuadTree:
     """
     A quadtree data structure for efficient spatial queries.
@@ -191,7 +200,8 @@ class QuadTree:
             boundaries.extend(self.southwest.get_all_boundaries())
         
         return boundaries
-    
+
+
 class CollisionDetector:
     """Handles collision detection using different methods."""
     
@@ -217,68 +227,73 @@ class CollisionDetector:
         return collisions
     
     @staticmethod
+    def _is_particle_nearby(particle: Particle, nearby_points: List[Point]) -> bool:
+        """Check if a particle's position is in the list of nearby points."""
+        return any(p.x == particle.x and p.y == particle.y for p in nearby_points)
+
+    @staticmethod
     def quadtree_method(particles: List[Particle], boundary: Rectangle) -> List[Tuple[int, int]]:
         """
         Detect collisions using quadtree O(n log n) method.
-        
+
         Args:
             particles: List of particles to check
             boundary: The boundary of the space
-            
+
         Returns:
             List of tuples containing indices of colliding particles
         """
         collisions = []
-        
+
         # Build quadtree
-        qt = QuadTree(boundary, capacity=4)
+        quadtree = QuadTree(boundary, capacity=4)
         for particle in particles:
-            qt.insert(Point(particle.x, particle.y))
-        
+            quadtree.insert(Point(particle.x, particle.y))
+
         # For each particle, query nearby particles
         for i, particle in enumerate(particles):
             # Create search range around particle
             search_range = Rectangle(
-                particle.x, 
+                particle.x,
                 particle.y,
-                particle.radius * 3,  # Search radius
+                particle.radius * 3,
                 particle.radius * 3
             )
-            
+
             # Find nearby points
-            nearby = qt.query(search_range)
-            
+            nearby = quadtree.query(search_range)
+
             # Check collisions only with nearby particles
-            for j, other in enumerate(particles):
-                if i < j:  # Avoid duplicate checks
-                    # Check if other particle is in nearby list
-                    if any(p.x == other.x and p.y == other.y for p in nearby):
-                        if particle.collides_with(other):
-                            collisions.append((i, j))
-        
+            for j in range(i + 1, len(particles)):
+                other = particles[j]
+                if CollisionDetector._is_particle_nearby(other, nearby):
+                    if particle.collides_with(other):
+                        collisions.append((i, j))
+
         return collisions
-    
+
+
 if __name__ == "__main__":
     # Simple test
-    boundary = Rectangle(400, 300, 400, 300)
-    qt = QuadTree(boundary, capacity=4)
-    
+    test_boundary = Rectangle(400, 300, 400, 300)
+    test_qt = QuadTree(test_boundary, capacity=4)
+
     # Insert some points
-    points = [
+    test_points = [
         Point(100, 100),
         Point(150, 120),
         Point(200, 180),
         Point(250, 190),
         Point(300, 200),
     ]
-    
-    for p in points:
-        qt.insert(p)
-    
-    print(f"Inserted {len(points)} points")
-    print(f"Tree subdivided: {qt.divided}")
-    
+
+    for point in test_points:
+        test_qt.insert(point)
+
+    print(f"Inserted {len(test_points)} points")
+    print(f"Tree subdivided: {test_qt.divided}")
+
     # Query a range
-    search = Rectangle(200, 200, 100, 100)
-    found = qt.query(search)
-    print(f"Found {len(found)} points in search range")
+    search_area = Rectangle(200, 200, 100, 100)
+    found_points = test_qt.query(search_area)
+    print(f"Found {len(found_points)} points in search range")
