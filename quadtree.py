@@ -96,3 +96,39 @@ class QuadTree:
         self.southwest = QuadTree(sw, self.capacity)
         
         self.divided = True
+        
+    def insert(self, point: Point) -> bool:
+        """
+        Insert a point into the quadtree.
+        
+        Args:
+            point: The point to insert
+            
+        Returns:
+            True if insertion was successful, False otherwise
+        """
+        # Ignore objects that don't belong in this quad tree
+        if not self.boundary.contains(point):
+            return False
+        
+        # If there's space and we haven't subdivided, add it here
+        if len(self.points) < self.capacity and not self.divided:
+            self.points.append(point)
+            return True
+        
+        # Otherwise, subdivide if needed and add to children
+        if not self.divided:
+            self.subdivide()
+        
+        # Try to insert into children
+        if self.northeast.insert(point):
+            return True
+        if self.northwest.insert(point):
+            return True
+        if self.southeast.insert(point):
+            return True
+        if self.southwest.insert(point):
+            return True
+        
+        # Should never reach here
+        return False
