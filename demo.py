@@ -97,3 +97,24 @@ class Demo:
             self.comparison_count = (len(self.particles) * (len(self.particles) - 1)) // 2
         
         self.collision_check_time = (time.time() - start_time) * 1000  # Convert to ms
+        
+    def draw_quadtree(self):
+        """Draw quadtree boundaries."""
+        if not self.show_tree or not self.use_quadtree:
+            return
+        
+        # Build quadtree
+        qt = QuadTree(self.boundary, capacity=4)
+        for particle in self.particles:
+            qt.insert(Point(particle.x, particle.y))
+        
+        # Draw all boundaries
+        boundaries = qt.get_all_boundaries()
+        for boundary in boundaries:
+            left = boundary.x - boundary.width
+            top = boundary.y - boundary.height
+            width = boundary.width * 2
+            height = boundary.height * 2
+            
+            pygame.draw.rect(self.screen, GRAY, 
+                        (left, top, width, height), 1)
