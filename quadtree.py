@@ -257,3 +257,28 @@ class CollisionDetector:
                             collisions.append((i, j))
         
         return collisions
+    
+if __name__ == "__main__":
+    # Simple test
+    boundary = Rectangle(400, 300, 400, 300)
+    qt = QuadTree(boundary, capacity=4)
+    
+    # Insert some points
+    points = [
+        Point(100, 100),
+        Point(150, 120),
+        Point(200, 180),
+        Point(250, 190),
+        Point(300, 200),
+    ]
+    
+    for p in points:
+        qt.insert(p)
+    
+    print(f"Inserted {len(points)} points")
+    print(f"Tree subdivided: {qt.divided}")
+    
+    # Query a range
+    search = Rectangle(200, 200, 100, 100)
+    found = qt.query(search)
+    print(f"Found {len(found)} points in search range")
