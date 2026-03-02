@@ -132,3 +132,35 @@ class QuadTree:
         
         # Should never reach here
         return False
+    
+    def query(self, range_rect: Rectangle, found: Optional[List[Point]] = None) -> List[Point]:
+        """
+        Find all points within a given range.
+        
+        Args:
+            range_rect: The rectangular area to search
+            found: List to accumulate found points (used in recursion)
+            
+        Returns:
+            List of points within the range
+        """
+        if found is None:
+            found = []
+        
+        # If range doesn't intersect this quad, return
+        if not self.boundary.intersects(range_rect):
+            return found
+        
+        # Check points at this level
+        for point in self.points:
+            if range_rect.contains(point):
+                found.append(point)
+        
+        # If subdivided, check children
+        if self.divided:
+            self.northwest.query(range_rect, found)
+            self.northeast.query(range_rect, found)
+            self.southwest.query(range_rect, found)
+            self.southeast.query(range_rect, found)
+        
+        return found
