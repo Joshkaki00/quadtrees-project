@@ -180,3 +180,63 @@ class Demo:
                 True, RED
             )
             self.screen.blit(warn, (WIDTH - 300, 10))
+            
+    def handle_events(self):
+        """Handle user input."""
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                self.running = False
+            
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_q:
+                    self.running = False
+                
+                elif event.key == pygame.K_SPACE:
+                    self.use_quadtree = not self.use_quadtree
+                    print(f"Switched to {'Quadtree' if self.use_quadtree else 'Brute Force'}")
+                
+                elif event.key == pygame.K_r:
+                    self.reset_particles()
+                    print("Particles reset")
+                
+                elif event.key == pygame.K_t:
+                    self.show_tree = not self.show_tree
+                
+                elif event.key == pygame.K_UP:
+                    self.num_particles = min(500, self.num_particles + 10)
+                    self.reset_particles()
+                    print(f"Particle count: {self.num_particles}")
+                
+                elif event.key == pygame.K_DOWN:
+                    self.num_particles = max(10, self.num_particles - 10)
+                    self.reset_particles()
+                    print(f"Particle count: {self.num_particles}")
+                    
+    def run(self):
+        """Main game loop."""
+        print("=== Quadtree Collision Detection Demo ===")
+        print("Press SPACE to toggle between methods")
+        print("Press UP/DOWN to change particle count")
+        print("Press T to toggle tree visualization")
+        print("Press R to reset particles")
+        print("Press Q to quit")
+        print()
+        
+        while self.running:
+            self.handle_events()
+            
+            # Update
+            self.update_particles()
+            self.detect_collisions()
+            
+            # Draw
+            self.screen.fill(BLACK)
+            self.draw_quadtree()
+            self.draw_particles()
+            self.draw_ui()
+            
+            pygame.display.flip()
+            self.clock.tick(FPS)
+        
+        pygame.quit()
+        print("Demo closed")
