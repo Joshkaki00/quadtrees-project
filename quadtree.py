@@ -25,3 +25,24 @@ class Rectangle:
                     self.x - self.width > other.x + other.width or
                     self.y + self.height < other.y - other.height or
                     self.y - self.height > other.y + other.height)
+        
+@dataclass
+class Particle:
+    """Represents a moving particle/object in 2D space."""
+    x: float
+    y: float
+    vx: float = 0.0  # Velocity x
+    vy: float = 0.0  # Velocity y
+    radius: float = 5.0
+    
+    def update(self, dt: float = 1.0):
+        """Update particle position based on velocity."""
+        self.x += self.vx * dt
+        self.y += self.vy * dt
+    
+    def collides_with(self, other: 'Particle') -> bool:
+        """Check if this particle collides with another particle."""
+        dx = self.x - other.x
+        dy = self.y - other.y
+        distance = (dx * dx + dy * dy) ** 0.5
+        return distance < (self.radius + other.radius)
