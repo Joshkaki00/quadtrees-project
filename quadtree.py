@@ -74,3 +74,25 @@ class QuadTree:
         self.northwest: Optional[QuadTree] = None
         self.southeast: Optional[QuadTree] = None
         self.southwest: Optional[QuadTree] = None
+        
+    def subdivide(self):
+        """Divide this node into four quadrants."""
+        x = self.boundary.x
+        y = self.boundary.y
+        w = self.boundary.width / 2
+        h = self.boundary.height / 2
+        
+        # Create four child nodes
+        ne = Rectangle(x + w, y - h, w, h)
+        self.northeast = QuadTree(ne, self.capacity)
+        
+        nw = Rectangle(x - w, y - h, w, h)
+        self.northwest = QuadTree(nw, self.capacity)
+        
+        se = Rectangle(x + w, y + h, w, h)
+        self.southeast = QuadTree(se, self.capacity)
+        
+        sw = Rectangle(x - w, y + h, w, h)
+        self.southwest = QuadTree(sw, self.capacity)
+        
+        self.divided = True
