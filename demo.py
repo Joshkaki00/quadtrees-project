@@ -56,3 +56,14 @@ class Demo:
         self.comparison_count = 0
         
         self.reset_particles()
+        
+    def reset_particles(self):
+        """Create new random particles."""
+        self.particles = []
+        for _ in range(self.num_particles):
+            x = random.uniform(50, WIDTH - 50)
+            y = random.uniform(50, HEIGHT - 50)
+            vx = random.uniform(-2, 2)
+            vy = random.uniform(-2, 2)
+            radius = random.uniform(5, 10)
+            self.particles.append(Particle(x, y, vx, vy, radius))
