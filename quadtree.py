@@ -191,3 +191,27 @@ class QuadTree:
             boundaries.extend(self.southwest.get_all_boundaries())
         
         return boundaries
+    
+class CollisionDetector:
+    """Handles collision detection using different methods."""
+    
+    @staticmethod
+    def brute_force(particles: List[Particle]) -> List[Tuple[int, int]]:
+        """
+        Detect collisions using brute force O(n²) method.
+        
+        Args:
+            particles: List of particles to check
+            
+        Returns:
+            List of tuples containing indices of colliding particles
+        """
+        collisions = []
+        n = len(particles)
+        
+        for i in range(n):
+            for j in range(i + 1, n):
+                if particles[i].collides_with(particles[j]):
+                    collisions.append((i, j))
+        
+        return collisions
