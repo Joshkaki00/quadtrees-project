@@ -67,3 +67,17 @@ class Demo:
             vy = random.uniform(-2, 2)
             radius = random.uniform(5, 10)
             self.particles.append(Particle(x, y, vx, vy, radius))
+            
+    def update_particles(self):
+        """Update particle positions and handle boundary collisions."""
+        for particle in self.particles:
+            particle.update()
+            
+            # Bounce off walls
+            if particle.x - particle.radius < 0 or particle.x + particle.radius > WIDTH:
+                particle.vx *= -1
+                particle.x = max(particle.radius, min(WIDTH - particle.radius, particle.x))
+            
+            if particle.y - particle.radius < 0 or particle.y + particle.radius > HEIGHT:
+                particle.vy *= -1
+                particle.y = max(particle.radius, min(HEIGHT - particle.radius, particle.y))
