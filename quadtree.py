@@ -48,8 +48,6 @@ class Particle:
         distance = (dx * dx + dy * dy) ** 0.5
         return distance < (self.radius + other.radius)
     
-
-
 class QuadTree:
     """
     A quadtree data structure for efficient spatial queries.
