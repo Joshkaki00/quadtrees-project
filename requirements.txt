@@ -1,0 +1,13 @@
+# Quadtree Collision Detection Project Dependencies
+# Generated: March 2, 2026
+# Python Version: 3.13+
+
+# Core Dependencies
+pygame==2.6.1          # 2D game development library with Python 3.13 support
+
+# Testing Dependencies
+pytest==9.0.2          # Testing framework
+pytest-cov==6.0.0      # Coverage plugin for pytest
+
+# Optional Development Dependencies (uncomment if needed)
+# pylint==4.0.5        # Code quality and linting tool
