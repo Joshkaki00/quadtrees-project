@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import List, Optional
 
 @dataclass
 class Point:
@@ -47,7 +48,7 @@ class Particle:
         distance = (dx * dx + dy * dy) ** 0.5
         return distance < (self.radius + other.radius)
     
-from typing import List, Optional
+
 
 class QuadTree:
     """
