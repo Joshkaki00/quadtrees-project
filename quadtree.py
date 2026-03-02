@@ -287,8 +287,8 @@ if __name__ == "__main__":
         Point(300, 200),
     ]
 
-    for point in test_points:
-        test_qt.insert(point)
+    for pt in test_points:
+        test_qt.insert(pt)
 
     print(f"Inserted {len(test_points)} points")
     print(f"Tree subdivided: {test_qt.divided}")
