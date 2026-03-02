@@ -131,3 +131,27 @@ class Demo:
             pygame.draw.circle(self.screen, color, 
                             (int(particle.x), int(particle.y)), 
                             int(particle.radius))
+            
+    def draw_ui(self):
+        """Draw user interface and stats."""
+        y_offset = 10
+        
+        # Title
+        method = "QUADTREE" if self.use_quadtree else "BRUTE FORCE"
+        title = self.large_font.render(method, True, YELLOW)
+        self.screen.blit(title, (10, y_offset))
+        y_offset += 40
+        
+        # Stats
+        stats = [
+            f"Particles: {len(self.particles)}",
+            f"Collisions: {len(self.collisions)}",
+            f"Comparisons: ~{self.comparison_count}",
+            f"Check Time: {self.collision_check_time:.2f}ms",
+            f"FPS: {int(self.clock.get_fps())}",
+        ]
+        
+        for stat in stats:
+            text = self.font.render(stat, True, WHITE)
+            self.screen.blit(text, (10, y_offset))
+            y_offset += 25
