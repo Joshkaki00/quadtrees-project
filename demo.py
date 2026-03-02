@@ -81,3 +81,19 @@ class Demo:
             if particle.y - particle.radius < 0 or particle.y + particle.radius > HEIGHT:
                 particle.vy *= -1
                 particle.y = max(particle.radius, min(HEIGHT - particle.radius, particle.y))
+                
+    def detect_collisions(self):
+        """Detect collisions using selected method."""
+        start_time = time.time()
+        
+        if self.use_quadtree:
+            self.collisions = CollisionDetector.quadtree_method(
+                self.particles, self.boundary
+            )
+            # Estimate comparisons saved
+            self.comparison_count = len(self.particles) * 4  # Rough estimate
+        else:
+            self.collisions = CollisionDetector.brute_force(self.particles)
+            self.comparison_count = (len(self.particles) * (len(self.particles) - 1)) // 2
+        
+        self.collision_check_time = (time.time() - start_time) * 1000  # Convert to ms
