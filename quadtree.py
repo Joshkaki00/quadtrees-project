@@ -164,3 +164,29 @@ class QuadTree:
             self.southeast.query(range_rect, found)
         
         return found
+    
+    def clear(self):
+        """Clear all points from the quadtree."""
+        self.points = []
+        self.divided = False
+        self.northeast = None
+        self.northwest = None
+        self.southeast = None
+        self.southwest = None
+
+    def get_all_boundaries(self) -> List[Rectangle]:
+        """
+        Get all boundaries in the tree (for visualization).
+        
+        Returns:
+            List of all rectangular boundaries in the tree
+        """
+        boundaries = [self.boundary]
+        
+        if self.divided:
+            boundaries.extend(self.northeast.get_all_boundaries())
+            boundaries.extend(self.northwest.get_all_boundaries())
+            boundaries.extend(self.southeast.get_all_boundaries())
+            boundaries.extend(self.southwest.get_all_boundaries())
+        
+        return boundaries
