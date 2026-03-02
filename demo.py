@@ -240,3 +240,12 @@ class Demo:
         
         pygame.quit()
         print("Demo closed")
+        
+    def main():
+        """Run the demo."""
+        demo = Demo()
+        demo.run()
+
+
+    if __name__ == "__main__":
+        main()
