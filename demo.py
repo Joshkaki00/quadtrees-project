@@ -118,3 +118,16 @@ class Demo:
             
             pygame.draw.rect(self.screen, GRAY, 
                         (left, top, width, height), 1)
+            
+    def draw_particles(self):
+        """Draw all particles."""
+        colliding_particles = set()
+        for i, j in self.collisions:
+            colliding_particles.add(i)
+            colliding_particles.add(j)
+        
+        for i, particle in enumerate(self.particles):
+            color = RED if i in colliding_particles else GREEN
+            pygame.draw.circle(self.screen, color, 
+                            (int(particle.x), int(particle.y)), 
+                            int(particle.radius))
