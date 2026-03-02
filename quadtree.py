@@ -215,3 +215,45 @@ class CollisionDetector:
                     collisions.append((i, j))
         
         return collisions
+    
+    @staticmethod
+    def quadtree_method(particles: List[Particle], boundary: Rectangle) -> List[Tuple[int, int]]:
+        """
+        Detect collisions using quadtree O(n log n) method.
+        
+        Args:
+            particles: List of particles to check
+            boundary: The boundary of the space
+            
+        Returns:
+            List of tuples containing indices of colliding particles
+        """
+        collisions = []
+        
+        # Build quadtree
+        qt = QuadTree(boundary, capacity=4)
+        for particle in particles:
+            qt.insert(Point(particle.x, particle.y))
+        
+        # For each particle, query nearby particles
+        for i, particle in enumerate(particles):
+            # Create search range around particle
+            search_range = Rectangle(
+                particle.x, 
+                particle.y,
+                particle.radius * 3,  # Search radius
+                particle.radius * 3
+            )
+            
+            # Find nearby points
+            nearby = qt.query(search_range)
+            
+            # Check collisions only with nearby particles
+            for j, other in enumerate(particles):
+                if i < j:  # Avoid duplicate checks
+                    # Check if other particle is in nearby list
+                    if any(p.x == other.x and p.y == other.y for p in nearby):
+                        if particle.collides_with(other):
+                            collisions.append((i, j))
+        
+        return collisions
