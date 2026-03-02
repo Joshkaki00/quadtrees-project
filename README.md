@@ -1,7 +1,6 @@
 # Quadtree Collision Detection
 
 **Author:** Joshkaki00  
-**Course:** ACS 3310 - Advanced Trees & Sorting Algorithms  
 **Date:** March 2026
 
 ## 🎯 Project Overview
