@@ -46,3 +46,32 @@ class Particle:
         dy = self.y - other.y
         distance = (dx * dx + dy * dy) ** 0.5
         return distance < (self.radius + other.radius)
+    
+from typing import List, Optional
+
+class QuadTree:
+    """
+    A quadtree data structure for efficient spatial queries.
+    
+    The quadtree recursively subdivides 2D space into four quadrants when
+    the number of objects exceeds a threshold (capacity).
+    """
+    
+    def __init__(self, boundary: Rectangle, capacity: int = 4):
+        """
+        Initialize a quadtree node.
+        
+        Args:
+            boundary: The rectangular boundary this node covers
+            capacity: Maximum number of points before subdivision
+        """
+        self.boundary = boundary
+        self.capacity = capacity
+        self.points: List[Point] = []
+        self.divided = False
+        
+        # Child nodes (will be created when subdividing)
+        self.northeast: Optional[QuadTree] = None
+        self.northwest: Optional[QuadTree] = None
+        self.southeast: Optional[QuadTree] = None
+        self.southwest: Optional[QuadTree] = None
