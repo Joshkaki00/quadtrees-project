@@ -227,11 +227,6 @@ class CollisionDetector:
         return collisions
     
     @staticmethod
-    def _is_particle_nearby(particle: Particle, nearby_points: List[Point]) -> bool:
-        """Check if a particle's position is in the list of nearby points."""
-        return any(p.x == particle.x and p.y == particle.y for p in nearby_points)
-
-    @staticmethod
     def quadtree_method(particles: List[Particle], boundary: Rectangle) -> List[Tuple[int, int]]:
         """
         Detect collisions using quadtree O(n log n) method.
@@ -245,10 +240,15 @@ class CollisionDetector:
         """
         collisions = []
 
-        # Build quadtree
+        # Build quadtree and map particle positions to indices
         quadtree = QuadTree(boundary, capacity=4)
-        for particle in particles:
-            quadtree.insert(Point(particle.x, particle.y))
+        particle_map = {}
+        
+        for idx, particle in enumerate(particles):
+            point = Point(particle.x, particle.y)
+            quadtree.insert(point)
+            # Use tuple as key for hashable lookup
+            particle_map[(particle.x, particle.y)] = idx
 
         # For each particle, query nearby particles
         for i, particle in enumerate(particles):
@@ -264,10 +264,12 @@ class CollisionDetector:
             nearby = quadtree.query(search_range)
 
             # Check collisions only with nearby particles
-            for j in range(i + 1, len(particles)):
-                other = particles[j]
-                if CollisionDetector._is_particle_nearby(other, nearby):
-                    if particle.collides_with(other):
+            for nearby_point in nearby:
+                j = particle_map.get((nearby_point.x, nearby_point.y))
+                
+                # Only check if valid index and avoid duplicate checks
+                if j is not None and i < j:
+                    if particle.collides_with(particles[j]):
                         collisions.append((i, j))
 
         return collisions

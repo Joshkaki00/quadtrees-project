@@ -9,7 +9,7 @@ Controls:
 - Q: Quit
 """
 
-import pygame
+import pygame  # pylint: disable=no-member
 import random
 import time
 from quadtree import QuadTree, Point, Rectangle, Particle, CollisionDetector
@@ -27,6 +27,7 @@ GRAY = (100, 100, 100)
 WIDTH = 800
 HEIGHT = 600
 FPS = 60
+
 
 class Demo:
     """Main demo application."""
@@ -186,31 +187,36 @@ class Demo:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running = False
-            
+
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_q:
-                    self.running = False
-                
-                elif event.key == pygame.K_SPACE:
-                    self.use_quadtree = not self.use_quadtree
-                    print(f"Switched to {'Quadtree' if self.use_quadtree else 'Brute Force'}")
-                
-                elif event.key == pygame.K_r:
-                    self.reset_particles()
-                    print("Particles reset")
-                
-                elif event.key == pygame.K_t:
-                    self.show_tree = not self.show_tree
-                
-                elif event.key == pygame.K_UP:
-                    self.num_particles = min(500, self.num_particles + 10)
-                    self.reset_particles()
-                    print(f"Particle count: {self.num_particles}")
-                
-                elif event.key == pygame.K_DOWN:
-                    self.num_particles = max(10, self.num_particles - 10)
-                    self.reset_particles()
-                    print(f"Particle count: {self.num_particles}")
+                self._handle_key_press(event.key)
+
+    def _handle_key_press(self, key):
+        """Handle individual key press events."""
+        if key == pygame.K_q:
+            self.running = False
+
+        elif key == pygame.K_SPACE:
+            self.use_quadtree = not self.use_quadtree
+            method_name = 'Quadtree' if self.use_quadtree else 'Brute Force'
+            print(f"Switched to {method_name}")
+
+        elif key == pygame.K_r:
+            self.reset_particles()
+            print("Particles reset")
+
+        elif key == pygame.K_t:
+            self.show_tree = not self.show_tree
+
+        elif key == pygame.K_UP:
+            self.num_particles = min(500, self.num_particles + 10)
+            self.reset_particles()
+            print(f"Particle count: {self.num_particles}")
+
+        elif key == pygame.K_DOWN:
+            self.num_particles = max(10, self.num_particles - 10)
+            self.reset_particles()
+            print(f"Particle count: {self.num_particles}")
                     
     def run(self):
         """Main game loop."""
@@ -240,12 +246,13 @@ class Demo:
         
         pygame.quit()
         print("Demo closed")
-        
-    def main():
-        """Run the demo."""
-        demo = Demo()
-        demo.run()
 
 
-    if __name__ == "__main__":
-        main()
+def main():
+    """Run the demo."""
+    demo = Demo()
+    demo.run()
+
+
+if __name__ == "__main__":
+    main()
